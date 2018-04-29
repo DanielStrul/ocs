@@ -15,8 +15,8 @@ export MAKEFLAGS += --warn-undefined-variables
 # Compiler, archiver and linker flags
 #
 export CC = g++
-export CFLAGS = --std=c++11 -Wall -Wextra -pedantic -I$(ROOTDIR)/common
-export LDFLAGS =  
+export CFLAGS = --std=c++11 -pthread -Wall -Wextra -pedantic -I$(ROOTDIR)/common
+export LDFLAGS = -lboost_program_options -lboost_system
 export AR = ar
 export ARFLAGS = rcs
 
@@ -24,8 +24,8 @@ export ARFLAGS = rcs
 # Cygwin-specific flags
 #
 ifeq ($(OS),Windows_NT)
-    export CC = x86_64-w64-mingw32-g++
-	export LDFLAGS += -lboost_filesystem -lboost_program_options -lboost_system -lws2_32
+	export CC = x86_64-w64-mingw32-g++
+	export LDFLAGS += -lws2_32
 endif
 
 #

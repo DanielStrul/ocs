@@ -16,41 +16,41 @@
 namespace ocs
 {
 
-	// Static map of log-level names
-	const std::unordered_map<LogLevel,const std::string> Logger::logLevelTexts = {
-		{trace,"trace"},
-		{debug,"debug"},
-		{info,"info"},
-		{warning,"warning"},
-		{error,"error"},
-		{fatal,"fatal"},
-		};
+    // Static map of log-level names
+    const std::unordered_map<LogLevel,const std::string> Logger::logLevelTexts =
+    {
+        {trace,"trace"},
+        {debug,"debug"},
+        {info,"info"},
+        {warning,"warning"},
+        {error,"error"},
+        {fatal,"fatal"},
+    };
 
-	// Static configuration setting for the minimum logging level
-	LogLevel Logger::minLevel_ = info;
+    // Static configuration setting for the minimum logging level
+    LogLevel Logger::minLevel_ = info;
 
-		
-	// Ctor:
-	// Initializes the logging of a new log line
-	Logger::Logger(const LogLevel level)
-	: level_(level)
-	, os_( level>=LogLevel::warning ? std::cerr : std::clog )
-	{
-		if (level_ >= minLevel_)
-		{	// Start logging only if log level >= minimum level setting
-			os_ << logLevelTexts.at(level) << ": ";
-		}
-	}
+        
+    // Ctor:
+    // Initializes the logging of a new log line
+    Logger::Logger(const LogLevel level)
+    : level_(level)
+    , os_( level>=LogLevel::warning ? std::cerr : std::clog )
+    {
+        if (level_ >= minLevel_)
+        {    // Start logging only if log level >= minimum level setting
+            os_ << logLevelTexts.at(level) << ": ";
+        }
+    }
 
-	// Dtor:
-	// Finalizes the logging of a log line
-	Logger::~Logger()
-	{
-		if (level_ >= minLevel_)
-		{	// Finalize logging only if log level >= minimum level setting
-			os_ << std::endl;
-		}
-	}
+    // Dtor:
+    // Finalizes the logging of a log line
+    Logger::~Logger()
+    {
+        if (level_ >= minLevel_)
+        {    // Finalize logging only if log level >= minimum level setting
+            os_ << std::endl;
+        }
+    }
 
 } // namespace ocs
-

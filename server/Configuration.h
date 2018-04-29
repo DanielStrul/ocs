@@ -16,20 +16,20 @@ namespace ocs
 namespace CountersServer
 {
 
-	// Configuration structure:
-	// Container for the server startup options
-	// No logic is required -> implemented as an open struct
-	struct Configuration
-	{
-		// listen port, 12345 by default
-		int port = Constants::defaultPort;
-		
-		// Work directory for storing runtime files
-		std::string workDirectory = "/var/run/";
-		
-		// minimum log level (info by default)
-		int minLogLevel = 0;
-	};
+    // Configuration structure:
+    // Container for the server startup options
+    // No logic is required -> implemented as an open struct
+    struct Configuration
+    {
+        // listen port, 12345 by default
+        int port = Constants::defaultPort;
+        
+        // Work directory for storing runtime files
+        std::string workDirectory = ".";
+        
+        // minimum log level (info by default)
+        int minLogLevel = 0;
+    };
 
 } // namespace CountersServer
 } // namespace ocs
