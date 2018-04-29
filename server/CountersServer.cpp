@@ -33,7 +33,7 @@ namespace CountersServer
     {
         start_receive();
     }
-        
+
     // start_receive():
     // Prepares the server for asynchronous reception of client requests
     void CountersServer::start_receive()
@@ -78,9 +78,9 @@ namespace CountersServer
             { 
                 handle_send(error, bytes_transferred); 
             });
-        
+
     }
-        
+
     // handle_send():
     // Handles the completion of an asynchronous response sending
     // - prepares for processing another query with start_receive()

@@ -39,7 +39,7 @@ namespace CountersServer
         // Dtor:
         // Is defaulted: automatically closes the persistent storage file (RAII)
         CountersStore() = default;
-        
+
         // getCounters():
         // Public API used by the counters server:
         // - receives a client's count request dispatched by a CountersServerDispatcher
@@ -47,7 +47,7 @@ namespace CountersServer
         // - persists to disk the updated count
         // - returns the updated count to the CountersServerDispatcher
         unsigned long long getCounters();
-        
+
     private:
         // openPersistentStorage():
         // Function called at startup from the ctor:
@@ -59,15 +59,15 @@ namespace CountersServer
 
         // Reference to the structure holding the server startup options
         const Configuration&     configuration_;
-        
+
         // Internal logic
         std::fstream             persistentStorage_;  // open stream for persistence to disk
         unsigned long long       queries_;            // current query count
-        
+
         // Since concurrent invocation of getCounters() is possible,
         // the counter and/or the fstream are protected by a common mutex
         mutable std::mutex       countersAndPersistenceMutex_;
-        
+
         // Filename for persistent storage to disk
         // Note that the filename is fixed:
         // + allows for easy retrieval of a count stored by a previous instance

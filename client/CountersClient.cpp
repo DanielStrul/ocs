@@ -26,7 +26,7 @@ namespace CountersClient
 {
 
     using boost::asio::ip::udp;
-        
+
     // Ctor:
     // Implements the asio's server startup logic
     CountersClient::CountersClient(const Configuration& configuration, boost::asio::io_service& io_context)
@@ -37,14 +37,14 @@ namespace CountersClient
     {
         // Open a socket
         socket_.open(udp::v6());
-        
+
         // Resolve the target hostname/service to an endpoint
         udp::resolver resolver(io_context_);
         udp::resolver::query query(udp::v6(), configuration_.hostname, configuration_.service);
         receiver_endpoint_ = *resolver.resolve(query);
         Logger(debug) << "Endpoint resolved to: " << receiver_endpoint_;
     }
-        
+
     // getCounters():
     // - sends a request to the target server
     // - receives the server's reply (message)

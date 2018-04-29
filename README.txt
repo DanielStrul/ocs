@@ -19,15 +19,15 @@ There are 3 subpackages in 3 separate subdirectories:
     common: a small library of components and configuration settings shared
             between the client and the server
 
-            
+
 Requirements
 ------------
 This package uses gcc and BOOST, assumed to be installed in the path and was
 tested in an AWS EC2 environment:
     g++ 7.3.1
     boost 1.53.0-27
-    
-    
+
+
 Building
 --------
 There is no 'configure' file yet, so building is done by launching 'make', and 
@@ -78,7 +78,7 @@ The client and the server are launched independently, with a few options:
       --log-level arg       set the log-level from -2 for trace to 3 for fatal
                             (default: 0 for info)
 
-                            
+
 Testing both programs
 ---------------------
 No unit tests were included yet.
@@ -92,7 +92,7 @@ Slightly more execution details are made available when launching the client and
     ./build/release/bin/server --log-level -1
     ./build/release/bin/client --log-level -1
 
-    
+
 Clientless server test
 ----------------------
 The server may actually be tested without the client using nc:

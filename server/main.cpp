@@ -34,7 +34,7 @@ namespace CountersServer
     {
         // A namespace alias is set for brievety
         namespace po = boost::program_options;
-        
+
         // Define the supported options
         po::options_description desc("Allowed options");
         desc.add_options()
@@ -45,12 +45,12 @@ namespace CountersServer
                 "set the work-directory for the persistent storage file (default: current directory)")
             ("log-level", po::value<>(&configuration.minLogLevel),
                 "set the log-level from -2 for trace to 3 for fatal (default: 0 for info)");
-            
+
         // Parse the command line options, which are stored directly into the Configuration object
         po::variables_map vm;
         po::store(po::parse_command_line(argc, argv, desc), vm);
         po::notify(vm);
-        
+
         // If the options include '--help', prints help and returns +1 to the caller
         if (vm.count("help")) 
         {
@@ -84,21 +84,32 @@ namespace CountersServer
 
             // Set minimum log level
             Logger::setMinLevel(static_cast<LogLevel>(configuration.minLogLevel));
-            
+
             // Create asio IO context
             boost::asio::io_service io_context;
-            
+
+            // Set handler for graceful shutdown.
+            boost::asio::signal_set signals(io_context, SIGINT, SIGTERM);
+            signals.async_wait(
+                [&io_context](boost::system::error_code /* ec */, int signal_number)
+                {
+                    Logger(info) << "Received signal " << signal_number;
+                    io_context.stop(); 
+                }
+            );
+
+
             // Create a counters store
             std::shared_ptr<CountersStore> store(new CountersStore(configuration));
 
             // Attach a dispatcher to the store, and create a counters server object
             std::shared_ptr<CountersServerDispatcher> dispatcher(new CountersServerDispatcher(configuration, store));
             CountersServer server(configuration, io_context, dispatcher);
-            
+
             // Run the server
             Logger(info) << "Listening...";
             io_context.run();
-            
+
             // Log shutdown
             Logger(info) << "=== server : shutdown ===";
             return 0;

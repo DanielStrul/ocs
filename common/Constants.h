@@ -18,7 +18,7 @@ namespace ocs
     {
         // default server and client port
         enum { defaultPort = 12345 };
-        
+
         // default size of reception buffers
         enum { defaultBufferSize = 1024 };
     };

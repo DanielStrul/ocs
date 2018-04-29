@@ -23,10 +23,10 @@ namespace CountersClient
     {
         // name (or ip) of the target server
         std::string hostname = "localhost";
-        
+
         // port number or service name, "12345" by default
         std::string service = std::to_string(Constants::defaultPort);
-        
+
         // minimum log level (info by default)
         int minLogLevel = 0;
     };

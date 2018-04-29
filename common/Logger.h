@@ -30,7 +30,7 @@ namespace ocs
         error,
         fatal
     };
-    
+
     // Logger: 
     // In general: is meant to provide a thin wrapper around some concrete logger facility or library
     // Meant to allow for changing the logger (for e.g. Boost or Google) without too much 
@@ -47,7 +47,7 @@ namespace ocs
         // Dtor:
         // Finalizes the logging of a log line
         ~Logger();
-        
+
         // insertion operator template:
         // Note: since a Logger is always meant to be used as a temporary
         // object, only the rvalue-reference case is handled.
@@ -66,14 +66,14 @@ namespace ocs
         {
             minLevel_ = value;
         }
-        
+
     private:
         LogLevel        level_; // Logging level for the current line
         std::ostream&   os_;    // stream for the current line (cout, cerr, ...)
-        
+
         // Static map of log-level names
         static const std::unordered_map<LogLevel,const std::string> logLevelTexts;
-        
+
         // Static configuration setting for the minimum logging level
         static LogLevel minLevel_;
     };

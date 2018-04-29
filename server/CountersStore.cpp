@@ -19,14 +19,14 @@ namespace ocs
 {
 namespace CountersServer
 {
-    
+
     // Filename for persistent storage to disk
     // Note that the filename is fixed:
     // + allows for easy retrieval of a count stored by a previous instance
     // - forbids several servers from running on the same machine (e.g. on different ports)
     const std::string CountersStore::theFilename_ = "query_counters.txt";
-    
-    
+
+
     // Ctor:
     // Is meant to be executed at server startup:
     // - opens the persistent storage file
@@ -41,8 +41,8 @@ namespace CountersServer
     {
         openPersistentStorage();
     }
-    
-    
+
+
     // getCounters():
     // Public API used by the counters server:
     // - receives a client's count request dispatched by a CountersServerDispatcher
@@ -52,7 +52,7 @@ namespace CountersServer
     unsigned long long CountersStore::getCounters()
     {
         unsigned long long result = 0;
-        
+
         // Since concurrent invocation of getCounters is possible,
         // the counter's and fstream's common mutex need be locked
         {
@@ -62,7 +62,7 @@ namespace CountersServer
             persistentStorage_ << queries_;
             persistentStorage_.flush();
         }
-        
+
         return result;
     }
 
@@ -79,7 +79,7 @@ namespace CountersServer
         if (!directory.empty() && directory.back() != '/')
             directory += '/';
         const auto filepath = directory + theFilename_;
-        
+
         // Try and open the stream for read/write
         persistentStorage_.open(filepath);
 
@@ -89,7 +89,7 @@ namespace CountersServer
             // Try and force the creation of a new, empty, file
             persistentStorage_.clear();
             persistentStorage_.open(filepath, std::ios::out);
-           
+
             // A new storage file must be created with a valid (non-empty) content
             persistentStorage_ << 0 << std::endl;
 
@@ -97,7 +97,7 @@ namespace CountersServer
             persistentStorage_.close();
             persistentStorage_.open(filepath);
         }
-        
+
         // If the stream is not open, abort on error
         if(persistentStorage_.fail())
         {
@@ -105,7 +105,7 @@ namespace CountersServer
             Logger(error) << msg;
             throw std::logic_error(msg);
         }
-        
+
         // Try and read the current query count
         persistentStorage_ >> queries_;
         if (persistentStorage_.fail())
@@ -114,7 +114,7 @@ namespace CountersServer
             Logger(error) << msg;
             throw std::logic_error(msg);
         }
-        
+
         Logger(info) << "Query count was read from the persistent storage file: " << queries_;
     }
 

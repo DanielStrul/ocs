@@ -34,7 +34,7 @@ namespace CountersClient
     {
         // A namespace alias is set for brievety
         namespace po = boost::program_options;
-        
+
         // Define the supported options.
         po::options_description desc("Allowed options");
         desc.add_options()
@@ -45,13 +45,13 @@ namespace CountersClient
                 "set the udp port or service name on the target server (default: 12345)")
             ("log-level", po::value<>(&configuration.minLogLevel),
                 "set the log-level from -2 for trace to 3 for fatal (default: 0 for info)");
-                
-            
+
+
         // Parse the command line options, which are stored directly into the Configuration object
         po::variables_map vm;
         po::store(po::parse_command_line(argc, argv, desc), vm);
         po::notify(vm);
-        
+
         // If the options include '--help', prints help and returns +1 to the caller
         if (vm.count("help")) 
         {
@@ -86,13 +86,23 @@ namespace CountersClient
 
             // Set minimum log level
             Logger::setMinLevel(static_cast<LogLevel>(configuration.minLogLevel));
-            
+
             // Create asio IO context
             boost::asio::io_service io_context;
 
+            // Set handler for logging when sutting down (not so gracefully)
+            boost::asio::signal_set signals(io_context, SIGINT, SIGTERM);
+            signals.async_wait(
+                [&io_context](boost::system::error_code /* ec */, int signal_number)
+                {
+                    Logger(info) << "Received signal " << signal_number;
+                    io_context.stop(); 
+                }
+            );
+
             // Create a counters client object
             CountersClient service(configuration, io_context);
-            
+
             // Pool the server every 5 seconds
             Logger(info) << "Pooling...";
             for (;;)
@@ -101,7 +111,7 @@ namespace CountersClient
                 service.getCounters();
                 t.wait();
             }
-            
+
             // Log shutdown
             Logger(info) << "=== server : shutdown ===";
             return 0;

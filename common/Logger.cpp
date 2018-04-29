@@ -30,7 +30,7 @@ namespace ocs
     // Static configuration setting for the minimum logging level
     LogLevel Logger::minLevel_ = info;
 
-        
+
     // Ctor:
     // Initializes the logging of a new log line
     Logger::Logger(const LogLevel level)

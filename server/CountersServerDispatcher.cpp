@@ -30,9 +30,9 @@ namespace CountersServer
         {
             const auto command = readCommand(buffer, bytes);
             Logger(debug) << "Received a command '" << command << "', dispatching";
-            
+
             const auto result = invokeExecutor(command);
-            
+
             Logger(debug) << "Command was successfully processed, result= " << result;
             return formatResult(result);
         }
@@ -43,7 +43,7 @@ namespace CountersServer
         }
     }
 
-    
+
     // readCommand(buffer, bytes):
     // Private method invoked by dispatchCommand() when processing a command:
     // - reads the input buffer into a string
@@ -55,7 +55,7 @@ namespace CountersServer
         return std::string(buffer, bytes);
     }
 
-    
+
     // invokeExecutor(command):
     // Private method invoked by dispatchCommand() when processing a command:
     // - checks that the command corresponds to an expected command name ("GET")
@@ -67,7 +67,7 @@ namespace CountersServer
         // Only one command for now, so a simple if-block is used (faster than a LUT search)
         if (command == "GET")
             return invoke_getCounters(command);
-        
+
         // Throw if the command is not valid: 
         // dispatchCommand() will convert the exception into an error message
         const auto msg = "Unrecognized command: '" + command + "'";
@@ -75,7 +75,7 @@ namespace CountersServer
         throw std::logic_error(msg);
     }
 
-    
+
     // invoke_getCounters(/*command*/):
     // Private method invoked by invokeExecutor() when processing a "GET" command:
     // - invokes the store's corresponding method
@@ -86,7 +86,7 @@ namespace CountersServer
         return std::to_string(result);
     }
 
-    
+
     // formatResult(result):
     // Private method invoked by dispatchCommand() when processing a result
     // returned by invokeExecutor():
@@ -96,7 +96,7 @@ namespace CountersServer
         return "OK: " + result + "\n";
     }
 
-    
+
     // formatError(exception):
     // Private method invoked by dispatchCommand() when processing an exception
     // raised during the processing of the query:
