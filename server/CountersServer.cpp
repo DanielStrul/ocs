@@ -57,8 +57,17 @@ namespace CountersServer
     {
         if (!ec)
         {
+			// Set-up a chrono for profiling purposes
+			const auto start = std::chrono::steady_clock::now();
+			
             const auto reply = dispatcher_->dispatchCommand(recv_buffer_.cbegin(), recv_bytes);
             start_reply(reply);
+			
+			// Compute elapsed for profiling purposes
+			const auto end = std::chrono::steady_clock::now();
+			const auto diff = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+			Logger(trace) << "CountersStore::getCounters() took: " << diff.count() << " us\n";
+			
         }
         else
         {

@@ -54,9 +54,6 @@ namespace CountersServer
     {
         unsigned long long result = 0;
 
-		// Set-up a chrono for profiling purposes
-		const auto start = std::chrono::steady_clock::now();
-		
         // Since concurrent invocation of getCounters is possible,
         // the counter's and fstream's common mutex need be locked
         {
@@ -67,11 +64,6 @@ namespace CountersServer
             persistentStorage_.flush();
         }
 
-		// Compute elapsed for profiling purposes
-		const auto end = std::chrono::steady_clock::now();
-        const auto diff = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-		Logger(trace) << "CountersStore::getCounters() took: " << diff.count() << " us\n";
-		
         return result;
     }
 
