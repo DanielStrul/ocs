@@ -12,7 +12,6 @@
 
 #include <fstream>
 #include <memory>
-#include <mutex>
 #include <string>
 #include "Configuration.h"
 
@@ -63,10 +62,6 @@ namespace CountersServer
         // Internal logic
         std::fstream             persistentStorage_;  // open stream for persistence to disk
         unsigned long long       queries_;            // current query count
-
-        // Since concurrent invocation of getCounters() is possible,
-        // the counter and/or the fstream are protected by a common mutex
-        mutable std::mutex       countersAndPersistenceMutex_;
 
         // Filename for persistent storage to disk
         // Note that the filename is fixed:

@@ -37,7 +37,6 @@ namespace CountersServer
     : configuration_(configuration)
     , persistentStorage_()
     , queries_(0)
-    , countersAndPersistenceMutex_()
     {
         openPersistentStorage();
     }
@@ -51,18 +50,9 @@ namespace CountersServer
     // - returns the updated count to the CountersServerDispatcher
     unsigned long long CountersStore::getCounters()
     {
-        unsigned long long result = 0;
-
-        // Since concurrent invocation of getCounters is possible,
-        // the counter's and fstream's common mutex need be locked
-        {
-            std::lock_guard<std::mutex> lock(countersAndPersistenceMutex_);
-            result = ++queries_;
-            persistentStorage_.seekp(0);
-            persistentStorage_ << queries_;
-        }
-
-        return result;
+		persistentStorage_.seekp(0);
+		persistentStorage_ << ++queries_;
+        return queries_;
     }
 
     // openPersistentStorage():
