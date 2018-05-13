@@ -36,14 +36,13 @@ namespace CountersServer
         CountersStore(const Configuration& configuration);
 
         // Dtor:
-        // Is defaulted: automatically closes the persistent storage file (RAII)
-        CountersStore() = default;
+		// - persists to disk the updated count before letting the persistent storage be closed
+        ~CountersStore();
 
         // getCounters():
         // Public API used by the counters server:
         // - receives a client's count request dispatched by a CountersServerDispatcher
         // - increments the query counts,
-        // - persists to disk the updated count
         // - returns the updated count to the CountersServerDispatcher
         unsigned long long getCounters();
 

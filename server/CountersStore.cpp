@@ -41,18 +41,24 @@ namespace CountersServer
         openPersistentStorage();
     }
 
+	// Dtor:
+    // - persists to disk the updated count before letting the persistent storage be closed
+	CountersStore::~CountersStore()
+	{
+		persistentStorage_.seekp(0);
+		persistentStorage_ << queries_;
+	}
+
+	
 
     // getCounters():
     // Public API used by the counters server:
     // - receives a client's count request dispatched by a CountersServerDispatcher
     // - increments the query counts,
-    // - persists to disk the updated count
     // - returns the updated count to the CountersServerDispatcher
     unsigned long long CountersStore::getCounters()
     {
-		persistentStorage_.seekp(0);
-		persistentStorage_ << ++queries_;
-        return queries_;
+        return ++queries_;
     }
 
     // openPersistentStorage():
