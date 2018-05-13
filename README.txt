@@ -3,7 +3,7 @@ OCS
 
 Content: The project OCS is a client/server exercice
 Author:  Daniel Strul
-Version: Demo 0.1, 2018/04/29
+Version: Demo 0.2, 2018/05/13
 
 Content
 -------
@@ -18,6 +18,9 @@ There are 3 subpackages in 3 separate subdirectories:
             described above) every 5 seconds with a 'GET' query
     common: a small library of components and configuration settings shared
             between the client and the server
+
+There is an additional subdirectory:
+    doc:    Miscellaneous docs (currently, only some results of profiling tests)
 
 
 Requirements
@@ -53,10 +56,24 @@ programs, in two separate subdirectories:
                     |- client
                     |- server
 
+You may also build a version dedicated to grprof profiling by launching 'make gprof', which
+builds both the client and the server programs, in a separate subdirectory:
+
+    root-directory
+        |
+        |- build
+            |
+            |- gprof
+                |
+                |- bin
+                    |
+                    |- client
+                    |- server
+
 
 Executing the programs
 ----------------------
-The client and the server are launched independently, with a few options:
+The client and the server are launched independently, with some launch options available:
 
     ./build/release/bin/server --help
     Usage: server [options]
@@ -100,3 +117,12 @@ The server may actually be tested without the client using nc:
 Shell 1> ./build/release/bin/server
 Shell 2> nc -u ::1 12345 <<< "GET"
 
+
+Profiling examples
+------------------
+There are various examples of profiling scripts in 'doc/Performance_profiling.xlsx'.
+For example, for a vary simple test with 'time':
+    echo "0" > query_counters.txt; \
+    (time build/release/bin/server &); \
+    (for i in {1..1000}; do nc -u ::1 12345  > /dev/null <<< "GET"; done); \
+    pkill -INT server

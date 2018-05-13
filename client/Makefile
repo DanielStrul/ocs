@@ -18,7 +18,7 @@ COMMONLIB = libcommon.a
 # Default build
 #
 .DEFAULT_GOAL = all
-all: debug release gprof
+all: debug release
 
 #
 # Debug targets and dependencies
