@@ -6,13 +6,13 @@ HDRS = $(wildcard *.h)
 OBJS = $(SRCS:.cpp=.o)
 LIB  = libcommon.a
 
-.PHONY: all debug release clean remake
+.PHONY: all debug release gprof clean remake
 
 #
 # Default build
 #
 .DEFAULT_GOAL = all
-all: debug release
+all: debug release gprof
 
 #
 # Debug targets
@@ -27,6 +27,13 @@ DBGLIB    = $(DBGLIBDIR)/$(LIB)
 RELOBJDIR = $(RELDIR)/common
 RELOBJS   = $(addprefix $(RELOBJDIR)/, $(OBJS))
 RELLIB    = $(RELLIBDIR)/$(LIB)
+
+#
+# gprof targets
+#
+GPROBJDIR = $(GPRDIR)/common
+GPROBJS   = $(addprefix $(GPROBJDIR)/, $(OBJS))
+GPRLIB    = $(GPRLIBDIR)/$(LIB)
 
 #
 # Debug rules
@@ -51,12 +58,23 @@ $(RELOBJDIR)/%.o: %.cpp
 	$(CC) $(CFLAGS) $(RELCFLAGS) -c -o $@ $<
 
 #
+# gprof rules
+#
+gprof: $(GPRDIR)/. $(GPROBJDIR)/. $(GPRLIBDIR)/. $(GPRLIB)
+
+$(GPRLIB): $(GPROBJS)
+	$(AR) $(ARFLAGS) $@ $^
+
+$(GPROBJDIR)/%.o: %.cpp
+	$(CC) $(CFLAGS) $(GPRCFLAGS) -c -o $@ $<
+
+#
 # Other/common rules
 #
 remake: clean all
 
 clean:
-	rm -f $(RELLIB) $(RELOBJS) $(DBGLIB) $(DBGOBJS)
+	rm -f $(RELLIB) $(RELOBJS) $(DBGLIB) $(DBGOBJS) $(GPRLIB) $(GPROBJS)
 
 %/.:
 	mkdir -p $@

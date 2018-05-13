@@ -12,13 +12,13 @@ EXE  = client
 COMMONHDRS = $(wildcard $(ROOTDIR)/common/*.h)
 COMMONLIB = libcommon.a
 
-.PHONY: all debug release clean remake
+.PHONY: all debug release gprof clean remake
 
 #
 # Default build
 #
 .DEFAULT_GOAL = all
-all: debug release
+all: debug release gprof
 
 #
 # Debug targets and dependencies
@@ -35,6 +35,14 @@ RELOBJDIR = $(RELDIR)/client
 RELOBJS   = $(addprefix $(RELOBJDIR)/, $(OBJS))
 RELEXE    = $(RELEXEDIR)/$(EXE)
 RELLIBS   = $(RELLIBDIR)/$(COMMONLIB)
+
+#
+# gprof targets and dependencies
+#
+GPROBJDIR = $(GPRDIR)/client
+GPROBJS   = $(addprefix $(GPROBJDIR)/, $(OBJS))
+GPREXE    = $(GPREXEDIR)/$(EXE)
+GPRLIBS   = $(GPRLIBDIR)/$(COMMONLIB)
 
 #
 # Debug rules
@@ -59,12 +67,23 @@ $(RELOBJDIR)/%.o: %.cpp $(HDRS) $(COMMONHDRS)
 	$(CC) $(CFLAGS) $(RELCFLAGS) -c -o $@ $<
 
 #
+# Gprof rules
+#
+gprof: $(GPRDIR)/. $(GPROBJDIR)/. $(GPREXEDIR)/. $(GPREXE)
+
+$(GPREXE): $(GPROBJS)  $(GPRLIBS)
+	$(CC) $(CFLAGS) $(GPRCFLAGS) -o $@ $^ $(LDFLAGS)
+
+$(GPROBJDIR)/%.o: %.cpp $(HDRS) $(COMMONHDRS)
+	$(CC) $(CFLAGS) $(GPRCFLAGS) -c -o $@ $<
+
+#
 # Other/common rules
 #
 remake: clean all
 
 clean:
-	rm -f $(RELEXE) $(RELOBJS) $(DBGEXE) $(DBGOBJS)
+	rm -f $(RELEXE) $(RELOBJS) $(DBGEXE) $(DBGOBJS) $(GPREXE) $(GPROBJS)
 
 %/.:
 	mkdir -p $@

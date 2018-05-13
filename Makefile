@@ -45,10 +45,18 @@ export RELEXEDIR = $(RELDIR)/bin
 export RELCFLAGS = -O3 -DNDEBUG
 
 #
+# gprof build settings
+#
+export GPRDIR = $(BUILDIR)/gprof
+export GPRLIBDIR = $(GPRDIR)/lib
+export GPREXEDIR = $(GPRDIR)/bin
+export GPRCFLAGS = $(RELCFLAGS) -pg
+
+#
 # Recursive rules
 #
 .DEFAULT_GOAL = all
-all debug release clean remake:
+all debug release gprof clean remake:
 	@for dir in $(SUBDIRS) ; do \
 		$(MAKE) -C $$dir $@ ; \
 	done
