@@ -60,7 +60,6 @@ namespace CountersServer
             result = ++queries_;
             persistentStorage_.seekp(0);
             persistentStorage_ << queries_;
-            persistentStorage_.flush();
         }
 
         return result;
